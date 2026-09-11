@@ -31,7 +31,6 @@ class CourseController extends Controller
 
     public function store(Request $request)
     {
-        // ✅ Handle bulk upload
         if ($request->hasFile('bulk_file')) {
             $request->validate([
                 'bulk_file' => 'required|file|mimes:csv,xlsx,xls,pdf|max:5120',
@@ -41,7 +40,6 @@ class CourseController extends Controller
             $ext = $file->getClientOriginalExtension();
             $school = Auth::user()->school;
 
-            // CSV/Excel
             if (in_array($ext, ['csv', 'xlsx', 'xls'])) {
                 $rows = Excel::toArray([], $file)[0];
                 foreach ($rows as $row) {
@@ -53,7 +51,6 @@ class CourseController extends Controller
                 }
             }
 
-            // PDF
             if ($ext === 'pdf') {
                 $parser = new Parser();
                 $pdf = $parser->parseFile($file->getRealPath());
@@ -84,7 +81,6 @@ class CourseController extends Controller
             return redirect('/dashboard')->with('success', 'Bulk courses added successfully!');
         }
 
-        // ✅ Single course creation
         $request->validate([
             'course_name' => 'required|string|max:255'
         ]);

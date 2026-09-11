@@ -1,6 +1,5 @@
 <x-layout>
 <style>
-/* Dashboard Header */
 .dashboard-header {
     margin-bottom: 2rem;
     text-align: left;

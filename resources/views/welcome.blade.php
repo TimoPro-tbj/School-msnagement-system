@@ -21,7 +21,6 @@
       position: relative;
     }
 
-    /* Overlay for readability */
     body::before {
       content: "";
       position: absolute;

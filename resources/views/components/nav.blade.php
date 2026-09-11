@@ -3,10 +3,8 @@
         <span>EduOs</span>
     </div>
 
-    <!-- Hamburger button (mobile only) -->
     <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">☰</button>
 
-    <!-- Links -->
     <div class="auth-links" id="navLinks">
         @guest
             <a href="/" class="auth-link">🏠 Home</a>

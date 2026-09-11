@@ -25,7 +25,7 @@ public function promote(Request $request)
 
     $teacher = Teachers::findOrFail($request->teacher_id);
 
-    // Ownership check
+    
     if ($teacher->school_id !== auth()->user()->school_id) {
         return redirect('/admin/dashboard')
             ->withErrors(['error' => 'You cannot promote teachers from another school.']);
@@ -96,7 +96,7 @@ public function promote(Request $request)
         return redirect('/admin/dashboard')->with('success', 'Selected actions deleted successfully.');
     }
 
-    // Resource methods
+    
     public function create() {}
     public function store(Request $request) {}
     public function show($id) {}

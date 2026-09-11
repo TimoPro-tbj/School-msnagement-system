@@ -73,7 +73,6 @@ body.theme-blue {
             min-height: 100vh;
         }
 
-        /* Sidebar */
         .sidebar {
             width: 260px;
             background: var(--sidebar-bg);
@@ -88,7 +87,6 @@ body.theme-blue {
             width: 80px;
         }
 
-        /* Toggle button */
         #toggleSidebar {
             background: transparent;
             border: none;
@@ -100,18 +98,16 @@ body.theme-blue {
         }
         #toggleSidebar:hover { transform: rotate(90deg); }
 
-        /* Main content */
         .main-content {
             flex: 1;
             padding: 2rem;
             transition: margin-left 0.3s ease;
-            margin-left: 260px; /* default sidebar width */
+            margin-left: 260px;
         }
         .sidebar.collapsed + .main-content {
-            margin-left: 80px; /* collapsed sidebar width */
+            margin-left: 80px; 
         }
 
-        /* Mobile overlay */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;

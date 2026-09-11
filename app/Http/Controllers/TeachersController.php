@@ -19,7 +19,6 @@ class TeachersController extends BaseController
         $user   = Auth::user();
         $school = $user->school;
 
-        // Find teacher record by email + school
         $teacher = Teachers::where('email', $user->email)
                            ->where('school_id', $school->id)
                            ->first();
@@ -28,19 +27,16 @@ class TeachersController extends BaseController
             return redirect('/dashboard')->with('error', 'No teacher record found.');
         }
 
-        // Courses taught by this teacher (match teacher_name in courses table)
         $courses = Courses::where('school_id', $school->id)
                           ->where('teacher_name', $teacher->teacher_name)
                           ->get();
 
-        // Students are not in your schema yet, so we’ll just show courses for now
         return view('dashboard.teacher', [
             'teacher' => $teacher,
             'courses' => $courses,
             'school'  => $school,
         ]);
     }
-    // Everyone can view teachers list
     public function index()
     {
         $school = Auth::user()->school;
@@ -48,13 +44,11 @@ class TeachersController extends BaseController
         return view('teachers.index', compact('teachers'));
     }
 
-    // Admin-only: show create form
     public function create()
     {
         return view('create.teachers');
     }
 
-    // Admin-only: store teacher (single + bulk)
     public function store(Request $request)
     {
         $request->validate([
@@ -127,7 +121,6 @@ class TeachersController extends BaseController
                 }
             }
 
-// PDF
 if ($ext === 'pdf') {
     $parser = new Parser();
     $pdf    = $parser->parseFile($file->getRealPath());
@@ -176,13 +169,11 @@ if ($ext === 'pdf') {
         return redirect('/dashboard')->with('success', 'Teachers added successfully!');
     }
 
-    // Admin-only: edit teacher
     public function edit(Teachers $teacher)
     {
         return view('editplace.teachersedit', compact('teacher'));
     }
 
-    // Admin-only: update teacher
     public function update(Request $request, Teachers $teacher)
     {
         $validated = $request->validate([
@@ -208,7 +199,6 @@ if ($ext === 'pdf') {
         return redirect('/teachers/show');
     }
 
-    // Admin-only: delete teacher
     public function destroy(Teachers $teacher)
     {
         if ($teacher->image_path && Storage::disk('public')->exists($teacher->image_path)) {

@@ -33,7 +33,6 @@ public function store(Request $request) {
 Auth::login($user); 
 $request->session()->regenerate(); 
 
-    // ✅ Automatically redirect to school registration
     return view('register-school')
                      ->with('info', 'Account created! Now register your school.');
 }
@@ -61,7 +60,6 @@ public function storeSchool(Request $request) {
                 ]);
             }
     
-    // Link school to logged-in user
       $user = Auth::user();
         $user->school_id = $school->id; 
         $user->save();

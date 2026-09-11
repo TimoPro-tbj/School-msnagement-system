@@ -1,7 +1,6 @@
 <x-nav></x-nav>
 <div class="login-wrapper">
     <div class="login-card">
-        <!-- Left form -->
         <div class="login-form">
             <div class="form-box">
                 <h2>Sign In</h2>
@@ -29,7 +28,6 @@
             </div>
         </div>
 
-        <!-- Right image -->
         <div class="login-image"></div>
     </div>
 </div>
@@ -43,7 +41,6 @@
     --radius-md: 12px;
 }
 
-/* Wrapper */
 .login-wrapper {
     display: flex;
     justify-content: center;
@@ -52,7 +49,6 @@
     background: var(--color-background);
 }
 
-/* Card */
 .login-card {
     display: flex;
     border-radius: var(--radius-md);
@@ -63,7 +59,6 @@
     height: 500px;
 }
 
-/* Form side */
 .login-form {
     flex: 1;
     display: flex;
@@ -85,7 +80,6 @@
     color: var(--color-primary);
 }
 
-/* Labels & Inputs */
 .label {
     display: block;
     margin-bottom: 0.5rem;
@@ -110,7 +104,6 @@
     box-shadow: 0 0 0 2px var(--color-primary);
 }
 
-/* Button */
 .btn-login {
     width: 100%;
     padding: 0.75rem;
@@ -128,14 +121,12 @@
     transform: scale(1.02);
 }
 
-/* Error */
 .error-text {
     color: #ef4444;
     font-size: 0.8rem;
     margin-top: 8px;
 }
 
-/* Image side */
 .login-image {
     flex: 1;
     background: url('/image.png') no-repeat center center;

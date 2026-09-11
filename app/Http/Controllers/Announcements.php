@@ -19,9 +19,8 @@ class Announcements extends Controller
 {
     $adminSchoolId = auth()->user()->school_id;
 
-    // Get teachers with their linked user account
     $teachers = Teachers::where('school_id', $adminSchoolId)
-        ->with('user') // eager load user
+        ->with('user') 
         ->get();
 
     $actions = Actions::where('admin_id', Auth::id())

@@ -26,7 +26,6 @@ public function store(Request $request)
     ])) {
         $request->session()->regenerate();
 
-        // Check school code separately
 $school = Schools::where('schoolcode', $credentials['schoolcode'])->first();
         if (!$school || Auth::user()->school_id !== $school->id) {
             Auth::logout();
