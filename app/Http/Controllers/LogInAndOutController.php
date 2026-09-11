@@ -26,19 +26,26 @@ public function store(Request $request)
     ])) {
         $request->session()->regenerate();
 
-$school = Schools::where('schoolcode', $credentials['schoolcode'])->first();
-        if (!$school || Auth::user()->school_id !== $school->id) {
+        $school = Schools::where('schoolcode', $credentials['schoolcode'])->first();
+
+        if (!$school) {
             Auth::logout();
-            return back()->withErrors(['schoolcode' => 'Invalid school code.']);
+            return back()->withErrors(['schoolcode' => 'School code not found.']);
         }
 
-        return redirect('/dashboard');
+        if (Auth::user()->school_id !== $school->id) {
+            Auth::logout();
+            return back()->withErrors(['schoolcode' => 'School code does not match your account.']);
+        }
+
+        return redirect()->route('dashboard');
     }
 
     return back()->withErrors([
         'email' => 'The provided credentials do not match our records.'
     ]);
 }
+
 
 protected function authenticated(Request $request, $user)
 {

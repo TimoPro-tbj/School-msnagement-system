@@ -29,8 +29,8 @@ Route::post('/password/update', [PasswordChange::class, 'update'])
     ->name('password.update')
     ->middleware('auth');Route::get('/register', [SchoolsRegisterController::class, 'create'])->middleware('guest');
 Route::post('/register', [SchoolsRegisterController::class, 'store'])->middleware('guest');
-Route::get('/register-school', [SchoolsRegisterController::class, 'showSchoolForm'])->name('register.school');
-Route::post('/register-school', [SchoolsRegisterController::class, 'storeSchool']); 
+Route::get('/register-school', [SchoolsRegisterController::class, 'showSchoolForm'])->name('register-school');
+Route::post('/register-school', [SchoolsRegisterController::class, 'storeSchool']);
 Route::get('/login', [LoginAndOutController::class, 'create'])->middleware('guest')->name('login');
 Route::post('/login', [LoginAndOutController::class, 'store'])->middleware('guest');
 Route::delete('/logout', [LoginAndOutController::class, 'destroy']);
@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/nav', [UserControoler::class, 'index']);
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
 
-   
+
      Route::middleware(['auth', 'can:isAdmin'])->group(function (){
         Route::get('/admin/dashboard', [Announcements::class, 'index']);
         Route::post('/admin/promote', [AdminController::class, 'promote']);

@@ -15,7 +15,8 @@ class SchoolsRegisterController extends Controller
         return view('register');
     }
 
-public function store(Request $request) {
+public function store(Request $request)
+{
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users',
@@ -26,16 +27,17 @@ public function store(Request $request) {
         'name' => $request->name,
         'email' => $request->email,
         'password' => bcrypt($request->password),
-        'role' => 'admin', 
-       'school_id' => null,
+        'role' => 'admin',
+        'school_id' => null,
     ]);
 
-Auth::login($user); 
-$request->session()->regenerate(); 
+    Auth::login($user);
+    $request->session()->regenerate();
 
-    return view('register-school')
+    return redirect()->route('register-school')
                      ->with('info', 'Account created! Now register your school.');
 }
+
 
 public function showSchoolForm() {
     return view('register-school');
@@ -59,15 +61,15 @@ public function storeSchool(Request $request) {
                     'badge_path' => $badgePath
                 ]);
             }
-    
+
       $user = Auth::user();
-        $user->school_id = $school->id; 
+        $user->school_id = $school->id;
         $user->save();
 
     return redirect('/dashboard')->with('success','Registration complete!');
 }
 
- 
+
     /**
      * Display the specified resource.
      */
