@@ -19,16 +19,15 @@ class Courses extends Model
     protected $fillable = [
         'course_name',
         'school_id',
-        'teacher_name',
     ];
-    
+
        public function school():BelongsTo
  {
     return $this->belongsTo(Schools::class);
  }
       public function students():HasMany
  {
-    return $this->hasMany(Students::class);
+    return $this->hasMany(Students::class, 'course_id');
  }
        public function teachers():HasMany
  {

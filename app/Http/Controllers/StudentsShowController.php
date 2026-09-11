@@ -15,17 +15,21 @@ class StudentsShowController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $school = Auth::user()->school;
-        if(!$school){
-            return redirect('login');
-        }
-
-        $student = Students::where('school_id',
-        $school->id)->orderBy('created_at', 'desc')->get();
-
-        return view('show.studentshow', compact('student', 'school'));
+{
+    $school = Auth::user()->school;
+    if(!$school){
+        return redirect('login');
     }
+
+    $student = Students::where('school_id', $school->id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    $courses = Courses::where('school_id', $school->id)->get();
+
+    return view('show.studentshow', compact('student', 'school', 'courses'));
+}
+
     /**
      * Show the form for creating a new resource.
      */
@@ -66,7 +70,7 @@ class StudentsShowController extends Controller
     public function update(Request $request, string $id)
     {
         $student = Students::findOrFail($id);
-  
+
           $request->validate([
          'course' => 'required|string|max:255',
          'name' => 'required|string|max:255',
@@ -78,12 +82,12 @@ class StudentsShowController extends Controller
           }
           $folderPath = "students/id_{$student->id}/assets";
            $imagePath = $request->file('image_path')->store($folderPath, 'public');
-          
+
            $student->image_path = $imagePath;
         }
         $student->name = $request->name;
         $student->course = $request->course;
-     
+
         return view('dashboard');
     }
 

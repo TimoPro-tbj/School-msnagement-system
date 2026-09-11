@@ -4,37 +4,49 @@ namespace App\Http\Controllers;
 
 use App\Models\Courses;
 use App\Models\Schools;
+use App\Models\User;
 use App\Models\Students;
 use App\Models\Teachers;
+use App\Models\Annoucement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserControoler extends Controller
 {
-    public function dashboard()
-    {
-        $school = Auth::user()->school;
+   public function dashboard()
+{
+    $latestAnnouncement = Annoucement::where('is_active', true)
+        ->latest()
+        ->value('message');
 
-        if (!$school) {
-            return redirect()->route('login');
-        }
-       $user = Auth::user();
-        $studentsCount = Students::where('school_id', $school->id)->count();
-        $coursesCount = Courses::where('school_id', $school->id)->count();
-        $teachersCount = Teachers::where('school_id', $school->id)->count();
-        $courses = Courses::where('school_id', $school->id)->get();
+    $school = Auth::user()->school;
 
-
-        return view('dashboard', compact(
-            'coursesCount',
-            'studentsCount',
-            'teachersCount',
-            'courses',
-            'school',
-            'user'
-        ));
+    if (!$school) {
+        return redirect()->route('login');
     }
 
+    $user = Auth::user();
+
+    $studentsCount = Students::where('school_id', $school->id)->count();
+    $coursesCount  = Courses::where('school_id', $school->id)->count();
+    $teachersCount = Teachers::where('school_id', $school->id)->count();
+
+    $courses  = Courses::where('school_id', $school->id)->get();
+    $teachers = Teachers::where('school_id', $school->id)->get();
+    $students = Students::where('school_id', $school->id)->get();
+
+    return view('dashboard', compact(
+        'coursesCount',
+        'studentsCount',
+        'teachersCount',
+        'courses',
+        'teachers',
+        'students',
+        'school',
+        'user',
+        'latestAnnouncement',
+    ));
+}
 
     /**
      * Display a listing of the resource.
@@ -57,22 +69,29 @@ class UserControoler extends Controller
      }
 
      public function store(Request $request)  {
-     $request->validate([
-     'schoolname' =>['required', 'string','max:75'],
-     'email' =>['required', 'string','min:5', 'unique:users'],
-     'password' =>['required','min:6'],
-     'badge_path'=>['nullable|mimes:jpeg,png,jpg,gif|max:2049'],
-     ] );
+  $request->validate([
+    'schoolname' => ['required', 'string','max:75'],
+    'schoolcode' => ['required','string','max:20','unique:schools,schoolcode'],
+    'email'      => ['required','string','min:5','unique:users'],
+    'password'   => ['required','min:6'],
+    'badge_path' => ['nullable','mimes:jpeg,png,jpg,gif','max:2049'],
+]);
 
 
-      $schools = Schools::create([
-       'schoolname'=>$request->schoolname,
-      ]);
+
+      $school = Schools::create([
+    'schoolname' => $request->schoolname,
+    'schoolcode' => $request->schoolcode,   // user sets this
+    'badge_path' => $request->badge_path,
+]);
+
         $user = User::create([
-        'email'=> $request->email,
-       'password'=>$request->password,
-       'school_id'=>$schools->id,
-        ]);
+    'name'      => $request->schoolname . ' Admin',
+    'email'     => $request->email,
+    'password'  => bcrypt($request->password),
+     'school_id' => null, 
+      'role'      => 'admin',
+]);
 
         \Illuminate\Support\Facades\Auth::login($user);
         return redirect('/dashboard');

@@ -14,36 +14,40 @@ class LoginAndOutController extends Controller
      */
 public function store(Request $request)
 {
-    $validate = $request->validate([
-        'email' => ['required', 'string', 'min:5'],
-        'password' => ['required', 'min:6'],
-        'schoolcode' => ['required', 'string', 'max:75'],
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|string',
+        'schoolcode' => 'required|string',
     ]);
 
-    $school = Schools::where('schoolcode', $validate['schoolcode'])->first();
-
-    if (!$school) {
-        return back()->withErrors([
-            'email' => 'The provided school code is incorrect.',
-        ]);
-    }
-
-    if (Auth::attempt(['email' => $validate['email'], 'password' => $validate['password']])) {
-        if (Auth::user()->school_id !== $school->id) {
-            Auth::logout();
-            return back()->withErrors([
-                'email' => 'You do not belong to this school.',
-            ]);
-        }
-
+    if (Auth::attempt([
+        'email' => $credentials['email'],
+        'password' => $credentials['password'],
+    ])) {
         $request->session()->regenerate();
 
-        return redirect()->intended('/dashboard');
+        // Check school code separately
+$school = Schools::where('schoolcode', $credentials['schoolcode'])->first();
+        if (!$school || Auth::user()->school_id !== $school->id) {
+            Auth::logout();
+            return back()->withErrors(['schoolcode' => 'Invalid school code.']);
+        }
+
+        return redirect('/dashboard');
     }
 
     return back()->withErrors([
-        'email' => 'The provided credentials do not match our records.',
+        'email' => 'The provided credentials do not match our records.'
     ]);
+}
+
+protected function authenticated(Request $request, $user)
+{
+    if ($user->must_change_password) {
+        return redirect()->route('password.change');
+    }
+
+    return redirect()->intended('/dashboard');
 }
 
 

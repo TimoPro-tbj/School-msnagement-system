@@ -4,18 +4,29 @@
             max-width: 800px; margin: 3rem auto; padding: 2.5rem;
             background: #fff; border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+
+        }
+        .head{
+            display:grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            justify-content:space-between;
+            gap:10rem;
+        }
+        .x{
+
         }
         .form-header h2 {
-             font-size:  1.75rem; 
+             font-size:  1.75rem;
              color: #1f2937;
+             display:grid;
               margin-bottom: 2rem;
              }
-        .form-grid { 
-            display: flex; 
+        .form-grid {
+            display: flex;
             flex-direction:column;
          }
-        .avatar-section { 
-            display: flex; 
+        .avatar-section {
+            display: flex;
             flex-direction: column;
              align-items: center;
              }
@@ -28,45 +39,48 @@
               margin-bottom: 1.5rem;
         }
         .custom-upload {
-            padding: 0.6rem 1.2rem; 
+            padding: 0.6rem 1.2rem;
             background: #2563eb;
              color: white;
             border-radius: 6px;
-             cursor: pointer; 
+             cursor: pointer;
              font-size: 0.875rem;
               font-weight: 500;
         }
         .form-group {
              display: flex;
               flex-direction: column;
-               gap: 0.5rem; 
+               gap: 0.5rem;
                margin-bottom: 1.5rem;
              }
         input[type="text"],
          input[type="date"] {
             padding: 0.75rem;
-            border: 1px solid #d1d5db; 
+            border: 1px solid #d1d5db;
             border-radius: 6px;
         }
         .btn-save {
             background: #16a34a;
-             color: white; 
+             color: white;
              padding: 0.75rem 2rem;
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
             font-weight: 600;
         }
     </style>
-  @include('partials.navbar')
 
     <div class="form-container">
-        <div class="form-header"><h2>Edit Course: {{ $course->name }}</h2></div>
+        <div class="head">
+                       <div class="form-header">
+                          <h2>Edit Course: {{ $course->name }}</h2>
+                      </div>
+              <div class="x">✖️</div>
+        </div>
 
         <form action="/{{  $course->id }}/course/update" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
-
             <div class="form-grid">
                 <div class="input-section">
                     <div class="form-group">

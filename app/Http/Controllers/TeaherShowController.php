@@ -22,10 +22,10 @@ class TeaherShowController extends Controller
             return redirect('login');
         }
 
-        $teacher = Teachers::where('school_id',
-        $school->id)->orderBy('created_at', 'desc')->get();
+        $teacher = Teachers::where('school_id', $school->id)->orderBy('created_at', 'desc')->get();
+       $courses = Courses::where('school_id', $school->id)->get();
         return view('show.teachershow',
-       compact('teacher','school')
+       compact('teacher','school','courses')
         );
     }
 

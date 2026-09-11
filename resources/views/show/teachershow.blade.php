@@ -163,20 +163,41 @@
     background:transparent;
     border:none;
     color:blue;
+    cursor:pointer;
 }
-
-    </style>
-      @include('partials.navbar')
+.filter-bar {
+    display:flex; gap:1rem; margin-bottom:1rem;
+}
+.filter-bar input, .filter-bar select {
+    padding:0.6rem 1rem; border-radius:8px;
+    border:1px solid rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.05); color:#fff;
+    font-size:0.9rem; outline:none; transition:all 0.2s ease;
+}
+.filter-bar input:focus, .filter-bar select:focus {
+    border-color:#4f46e5; box-shadow:0 0 8px rgba(79,70,229,0.4);
+}
+</style>
 
 <div class="table-container">
     <div class="table-header">
         <div>
-            <h2>Registered Teachers At {{ $school->schoolname}}</h2>
+            <h2>Registered Teachers At {{ $school->schoolname }}</h2>
             <p class="table-subtitle">Manage active Teacher's accounts and course allocations</p>
         </div>
         <div class="table-badge-total">
             Total: <span>{{ $teacher->count() }}</span>
         </div>
+    </div>
+
+    <div class="filter-bar">
+        <input type="text" id="searchInput" placeholder="Search by name...">
+        <select id="courseFilter">
+            <option value="">Filter by course</option>
+            @foreach($courses as $course)
+                <option value="{{ $course->course_name }}">{{ $course->course_name }}</option>
+            @endforeach
+        </select>
     </div>
 
     <div class="table-responsive">
@@ -187,49 +208,67 @@
                     <th>Teacher Name</th>
                     <th>Assigned Course</th>
                     <th>Registration Date</th>
+                    <th class="text-right">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($teacher as $teacher)
+                @foreach($teacher as $t)
                 <tr>
                     <td>
-                        <img src="{{ asset('storage/' .$teacher->image_path ) }}" class="image">
+                        <img src="{{ asset('storage/' .$t->image_path ) }}" class="image" alt="Photo of {{ $t->teacher_name }}">
                     </td>
                     <td>
                         <div class="student-profile-cell">
                             <div class="avatar-placeholder">
-                                {{ strtoupper(substr($teacher->teacher_name, 0, 2)) }}
+                                {{ strtoupper(substr($t->teacher_name, 0, 2)) }}
                             </div>
-                            <span class="student-name">{{ $teacher->teacher_name }}</span>
+                            <span class="student-name">{{ $t->teacher_name }}</span>
                         </div>
                     </td>
                     <td>
-                        <span class="course-tag">{{ $teacher->course ?? 'Unassigned' }}</span>
+                        <span class="course-tag">{{ $t->course ?? 'Unassigned' }}</span>
                     </td>
                     <td>
-                        <span class="date-text">{{ $teacher->created_at  ?? 'No Date' }}</span>
+                        <span class="date-text">{{ $t->created_at ? $t->created_at->format('M d, Y') : 'No Date' }}</span>
                     </td>
                     <td class="text-right">
-                        <a href="/{{ $teacher->id }}/student/edit" class="action-btn edit-btn">
+                        <a href="/{{ $t->id }}/teacher/edit" class="action-btn edit-btn">
                             <i class="fas fa-edit"></i> Edit
                         </a>
-                    </td>
-                  <td class="action-buttons"> 
-                      <form action="/{{$teacher->id}}/teacher/delete" method="POST" onsubmit="return confirm('Are you sure?');">
-                               @csrf
-                              @method('DELETE')
-                               <button type="submit" class="btn-delete" title="Delete">
-                                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                      <polyline points="3 6 5 6 21 6"></polyline>
-                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    </svg>
-                               </button>
+                        <form action="/{{ $t->id }}/teacher/delete" method="POST" onsubmit="return confirm('Are you sure?');" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-delete" title="Delete">🗑</button>
                         </form>
-                   </td>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+const searchInput = document.getElementById('searchInput');
+const courseFilter = document.getElementById('courseFilter');
+const rows = document.querySelectorAll('.custom-table tbody tr');
+
+function filterTable() {
+    let nameFilter = searchInput.value.toLowerCase();
+    let courseFilterValue = courseFilter.value.toLowerCase();
+
+    rows.forEach(row => {
+        let name = row.querySelector('.student-name').textContent.toLowerCase();
+        let course = row.querySelector('.course-tag').textContent.toLowerCase();
+
+        let matchesName = name.includes(nameFilter);
+        let matchesCourse = courseFilterValue === "" || course.includes(courseFilterValue);
+
+        row.style.display = (matchesName && matchesCourse) ? '' : 'none';
+    });
+}
+
+searchInput.addEventListener('keyup', filterTable);
+courseFilter.addEventListener('change', filterTable);
+</script>
 </x-layout>

@@ -1,124 +1,145 @@
 <x-nav></x-nav>
-<x-layout>
+<div class="login-wrapper">
+    <div class="login-card">
+        <!-- Left form -->
+        <div class="login-form">
+            <div class="form-box">
+                <h2>Sign In</h2>
+                <form action="/login" method="POST" autocomplete="off">
+                    @csrf
+                    <label class="label">Email</label>
+                    <input type="email" name="email" class="input" placeholder="Enter Email..." required>
+
+                    <label class="label">Password</label>
+                    <input type="password" name="password" class="input" placeholder="Enter Password..." required>
+
+                    <label class="label">School Code</label>
+                    <input type="text" name="schoolcode" class="input" placeholder="Enter School Code..." required>
+
+                    <button type="submit" class="btn-login">Login</button>
+
+                    @if ($errors->any())
+                        <div class="error-text">
+                            @foreach ($errors->all() as $error)
+                                <p>{{ $error }}</p>
+                            @endforeach
+                        </div>
+                    @endif
+                </form>
+            </div>
+        </div>
+
+        <!-- Right image -->
+        <div class="login-image"></div>
+    </div>
+</div>
 <style>
     :root {
-        /* Defining the variables from da175481-8cd5-44f4-88f5-ca11a098e5ab */
-        --color-background: #0b0e14;
-        --color-card: #161b22;
-        --color-primary: #38bdf8;
-        --color-border: #30363d;
-        --color-foreground: #e6edf3;
-        --spacing: 4px;
-        --radius-md: 8px;
-    }
+    --color-background: #f4f6f9;
+    --color-card: #ffffff;
+    --color-primary: #2563eb;
+    --color-border: #d1d5db;
+    --color-foreground: #1e293b;
+    --radius-md: 12px;
+}
 
-    .form {
-        color: var(--color-foreground);
-        display: flex;
-        min-hieght: 100vh;
-        margin:auto;
-        font-family:sans-serif;
-        justify-content: center;
-        align-items:center;
-        padding-top: 60px;
-    }
+/* Wrapper */
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: var(--color-background);
+}
 
-    /* Form Container styling from 608dae91-4945-4803-ab91-5fb6c13db6b6 */
-    .fieldset {
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-md);
-        padding: calc(var(--spacing) * 6);
-        width: 100%;
-        margin:auto;
-        max-width: 400px;
-    }
+/* Card */
+.login-card {
+    display: flex;
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    max-width: 900px;
+    width: 100%;
+    height: 500px;
+}
 
-    .fieldset-legend {
-        color: var(--color-primary);
-        font-weight: bold;
-        font-size: 1.2rem;
-        padding: 0 10px;
-    }
+/* Form side */
+.login-form {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background: var(--color-card);
+    color: var(--color-foreground);
+}
 
-    /* Label styling from 4ffbda71-2a41-470c-9816-593fb938f0d9 */
-    .label {
-        display: block;
-        margin-top: calc(var(--spacing) * 4);
-        margin-bottom: calc(var(--spacing) * 2);
-        font-size: 0.9rem;
-        color: #8b949e;
-    }
+.form-box {
+    width: 100%;
+    max-width: 320px;
+}
 
-    /* Input styling from da175481-8cd5-44f4-88f5-ca11a098e5ab */
-    .input {
-        width: 100%;
-        box-sizing: border-box; /* Crucial for width: 100% */
-        background-color: var(--color-background);
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-md);
-        color: var(--color-foreground);
-        padding: calc(var(--spacing) * 3);
-        outline: 2px solid transparent;
-        transition: all 0.2s ease;
-    }
+.form-box h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
+}
 
-    /* Focus state from 1636ac42-41ed-4144-a889-f43b75930558 */
-    .input:focus {
-        border-color: var(--color-primary);
-        box-shadow: 0 0 0 calc(var(--spacing) * 1) var(--color-background),
-                    0 0 0 calc(var(--spacing) * 2) var(--color-primary);
-    }
+/* Labels & Inputs */
+.label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #64748b;
+}
 
-    /* Button styling from 608dae91-4945-4803-ab91-5fb6c13db6b6 & f118df98-b1ed-4f1b-b283-15345dc43283 */
-    .btn-neutral {
-        display: block;
-        width: 100%;
-        background-color: rgba(2, 105, 2, 0.932);
-        color: var(--color-background);
-        border: none;
-        border-radius: var(--radius-md);
-        padding: calc(var(--spacing) * 3);
-        font-weight: 600;
-        margin-top: calc(var(--spacing) * 6);
-        cursor: pointer;
-        transition: opacity 0.2s;
-    }
+.input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: #f9fafb;
+    color: var(--color-foreground);
+    margin-bottom: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
 
-    .btn-neutral:hover {
-        opacity: 0.9;
-    }
+.input:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
 
-    /* Error handling from 4ffbda71-2a41-470c-9816-593fb938f0d9 */
-    .error-text {
-        color: #f85149;
-        font-size: 0.8rem;
-        margin-top: 8px;
-    }
+/* Button */
+.btn-login {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn-login:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+/* Error */
+.error-text {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 8px;
+}
+
+/* Image side */
+.login-image {
+    flex: 1;
+    background: url('/image.png') no-repeat center center;
+    background-size: cover;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
 </style>
-<form action="/login" method="POST" class="form" autocomplete="off">
-    @csrf
-    <fieldset class="fieldset">
-        <legend class="fieldset-legend">Sign In</legend>
-
-        <label class="label">Email</label>
-        <input type="email" name="email" class="input" placeholder="Enter Email...">
-
-        <label class="label">Password</label>
-        <input type="password" name="password" class="input" placeholder="Enter Password...">
-
-        <label class="label">School Code</label>
-        <input type="password" name="schoolcode" class="input" placeholder="Enter Schoolcode...">
-
-        <button type="submit" class="btn-neutral">Sign In</button>
-
-        @if ($errors->any())
-            <div class="error-text">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
-    </fieldset>
-</form>
-
-</x-layout>

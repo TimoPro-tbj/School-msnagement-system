@@ -102,13 +102,15 @@
                 padding: 2rem 1.5rem;
             }
         }
+
     </style>
+
 </head>
 <body>
 
     <div class="about-box">
         <h1 class="heading">About Our Portal</h1>
-        
+
         <p class="description">
             Welcome to our unified School Management Platform. Designed to optimize modern academic operations, this platform coordinates vital relationships among administration teams, teaching departments, and the student collective. Our mission centers on refining data entry workflows, safeguarding institutional information, and offering immediate workspace visibility to everyone involved.
         </p>

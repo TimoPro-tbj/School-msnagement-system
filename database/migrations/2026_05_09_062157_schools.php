@@ -12,14 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('schools', function (Blueprint $table) {
-           $table->id();
-            $table->string('schoolname');
-           $table->string('badge_path')->nullable();
-          $table->string('schoolcode');
+    $table->id();
+    $table->string('schoolname');
+    $table->string('badge_path')->nullable(); // optional logo
+    $table->string('schoolcode')->unique();   // unique code for each school
+    $table->timestamps();
+});
 
-            $table->rememberToken();
-            $table->timestamps();
-        });
     }
     /**
      * Reverse the migrations.

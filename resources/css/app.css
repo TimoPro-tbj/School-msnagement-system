@@ -65,3 +65,116 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+/* Default theme (root variables) */
+:root {
+  --bg: #f9fafb;
+  --text: #111827;
+  --text-secondary: #6b7280;
+  --accent: #2563eb;
+  --sidebar-bg: #0f1724;
+  --card-bg: #ffffff;
+  --border-glow: #e2e8f0;
+}
+
+/* Light theme */
+body.theme-light {
+  --bg: #f9fafb;
+  --text: #111827;
+  --text-secondary: #6b7280;
+  --accent: #2563eb;
+  --sidebar-bg: #0f1724;
+  --card-bg: #ffffff;
+  --border-glow: #e2e8f0;
+}
+
+/* Dark theme */
+body.theme-dark {
+  --bg: #0b1220;
+  --text: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --accent: #38bdf8;
+  --sidebar-bg: #111827;
+  --card-bg: #161b22;
+  --border-glow: #30363d;
+}
+
+/* Blue theme */
+body.theme-blue {
+  --bg: #eaf2ff;
+  --text: #1e293b;
+  --text-secondary: #475569;
+  --accent: #2563eb;
+  --sidebar-bg: #1e40af;
+  --card-bg: #ffffff;
+  --border-glow: #cbd5e1;
+}
+.actions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.actions-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.filter-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.filter-form input[type="date"] {
+    padding: 0.4rem;
+    border: 1px solid var(--border-glow);
+    border-radius: 6px;
+    background: var(--card-bg);
+    color: var(--text);
+}
+
+.filter-btn {
+    background: var(--accent);
+    color: #fff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+.filter-btn:hover {
+    background: #4a2c11;
+}
+
+.actions-table-wrapper {
+    overflow-x: auto;
+    background: var(--card-bg);
+    border: 1px solid var(--border-glow);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.actions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.actions-table th,
+.actions-table td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-glow);
+    color: var(--text);
+}
+
+.actions-table th {
+    background: var(--sidebar-bg);
+    color: #fff;
+    font-weight: 600;
+}
+
+.actions-table tr:hover td {
+    background: rgba(0,0,0,0.05);
+}

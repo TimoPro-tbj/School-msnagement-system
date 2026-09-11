@@ -15,55 +15,61 @@ class SchoolsRegisterController extends Controller
         return view('register');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'schoolname' => 'required|string|max:75',
-            'schoolcode' => 'required|string|max:75',
-            'name' => 'required|string|max:75',
-            'email' => 'required|string|min:5|unique:users,email',
-            'password' => 'required|string|min:6',
-            'badge_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2049',
-        ]);
+public function store(Request $request) {
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|string|min:8',
+    ]);
 
-        DB::beginTransaction();
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt($request->password),
+        'role' => 'admin', 
+       'school_id' => null,
+    ]);
 
-        try {
-            $schoolRecord = Schools::create([
+Auth::login($user); 
+$request->session()->regenerate(); 
+
+    // ✅ Automatically redirect to school registration
+    return view('register-school')
+                     ->with('info', 'Account created! Now register your school.');
+}
+
+public function showSchoolForm() {
+    return view('register-school');
+}
+
+public function storeSchool(Request $request) {
+    if (Schools::where('schoolcode', $request->schoolcode)->exists()) {
+    return back()->withErrors(['schoolcode' => 'This school code is already taken.']);
+}
+   $school = Schools::create([
                 'schoolname' => $request->schoolname,
                 'schoolcode' => $request->schoolcode,
                 'badge_path' => null,
             ]);
 
             if ($request->hasFile('badge_path')) {
-                $folderPath = "schools/id_{$schoolRecord->id}/assets";
+                $folderPath = "schools/id_{$school->id}/assets";
                 $badgePath = $request->file('badge_path')->store($folderPath, 'public');
 
-                $schoolRecord->update([
+                $school->update([
                     'badge_path' => $badgePath
                 ]);
             }
+    
+    // Link school to logged-in user
+      $user = Auth::user();
+        $user->school_id = $school->id; 
+        $user->save();
 
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'school_id' => $schoolRecord->id,
-            ]);
+    return redirect('/dashboard')->with('success','Registration complete!');
+}
 
-            DB::commit();
-           Auth::login($user);
-            return redirect('/dashboard');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => $e->getMessage()]);
-        }
-    }
-
-
-
-
+ 
     /**
      * Display the specified resource.
      */

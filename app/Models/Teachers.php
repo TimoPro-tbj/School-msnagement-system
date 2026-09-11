@@ -27,11 +27,19 @@ class Teachers extends Model
         'school_id',
         'course',
         'image_path',
+        'schoolcode',
+        'email',
+        'password',
     ];
      public function school():BelongsTo
  {
     return $this->belongsTo(Schools::class);
  }
+ public function user()
+{
+   return $this->hasOne(User::class, 'email', 'email');
+   }
+
       public function courses():HasMany
  {
     return $this->hasMany(Courses::class);

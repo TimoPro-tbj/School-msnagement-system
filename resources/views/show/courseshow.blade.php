@@ -166,7 +166,6 @@
 }
 
     </style>
-      @include('partials.navbar')
 
 <div class="table-container">
     <div class="table-header">
@@ -190,7 +189,7 @@
             <tbody>
                 @foreach($course as $course)
                 <tr>
- 
+
                     <td>
                         <div class="student-profile-cell">
                             <span class="student-name">{{ $course->course_name }}</span>
@@ -204,7 +203,7 @@
                             <i class="fas fa-edit"></i> Edit
                         </a>
                     </td>
-                  <td class="action-buttons"> 
+                  <td class="action-buttons">
                       <form action="/{{$course->id}}/course/delete" method="POST" onsubmit="return confirm('Are you sure?');">
                                @csrf
                               @method('DELETE')

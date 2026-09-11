@@ -1,158 +1,151 @@
-<style>
-.nav-container {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.25rem 4rem;
-    background: rgba(0, 0, 0, 0.3);
-    border-bottom: 1px solid var(--border-glow);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-.btnm {
-            background: rgba(239, 68, 68, 0.05);
-            color: #f87171;
-            border: 1px solid rgba(239, 68, 68, 0.25);
-            padding: 0.6rem 1.4rem;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+<div class="sidebar" id="sidebar">
 
-        .btnm:hover {
-            background: #ef4444;
-            color: #ffffff;
-            border-color: #ef4444;
-            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
-            transform: translateY(-2px);
-        }
+    <div class="header">
+                <button id="toggleSidebar" aria-label="Toggle sidebar">☰</button>
+        <div class="header-top">
+            <img src="{{ asset('storage/' . ($schoolBadge ?? 'default-badge.png')) }}" class="logo-img" alt="School Badge">
+            <a href="/dashboard" class="school-name">{{ $schoolName ?? 'Default School' }}</a>
+        </div>
+    </div>
+
+    <nav class="nav-links">
+        <a href="/teachers/show" class="link {{ Request::is('teachers/*') ? 'active' : '' }}">👨‍🏫 <span class="link-text">Teachers</span></a>
+        <a href="/students/show" class="link {{ Request::is('students/*') ? 'active' : '' }}">🎓 <span class="link-text">Students</span></a>
+        <a href="/courses/show" class="link {{ Request::is('courses/*') ? 'active' : '' }}">📚 <span class="link-text">Courses</span></a>
+        <a href="/admin/dashboard" class="link {{ Request::is('admin/*') ? 'active' : '' }}">🛡️ <span class="link-text">Admin</span></a>
+        <a href="{{ route('admin.actions.index') }}" class="link {{ Request::is('admin/actions*') ? 'active' : '' }}">⚡ <span class="link-text">Actions</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <a href="#settings-popup" onclick="openSettings()" class="link settings">⚙️ <span class="link-text">Settings</span></a>
+        <form method="POST" action="/logout">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="logout-btn">🚪 <span class="link-text">Log out</span></button>
+        </form>
+    </div>
+</div>
+
+<style>
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background: #072846;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.2);
+    transition: width 0.3s ease; /* smooth collapse */
+}
 .header {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 1.2rem;
-}
-.logo-img {
-    width: 44px;
-    height: 44px;
-    object-fit: cover;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-.span {
-    text-decoration:none;
-    font-size: 1.4rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    background: linear-gradient(135deg, #ffffff 40%, var(--coffee-light) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 0.3px;
-    position: relative;
-
+    gap: 0.6rem;
+    margin-bottom: 2rem;
 }
 
-.span::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--coffee-primary);
-    transition: width 0.3s ease;
-}
-.span:hover {
-    color: var(--text-primary);
-}
-.span:hover::after {
-    width: 100%;
-}
-.span.active {
-    color: var(--text-primary);
-}
-.span.active::after {
-    width: 100%;
-}
-.lenks {
+.header-top {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 2.2rem;
+    gap: 0.6rem;
 }
-.links {
+
+#toggleSidebar {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+#toggleSidebar:hover { transform: rotate(90deg); }
+        .sidebar.collapsed { width: 80px; }
+
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+}
+
+.logo-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.school-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
     text-decoration: none;
-    color: var(--text-secondary);
+}
+
+
+.nav-links {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top:20px;
+}
+
+.link {
+    text-decoration: none;
+    color: #cbd5e1;
     font-size: 0.95rem;
     font-weight: 600;
-    letter-spacing: 0.3px;
-    transition: color 0.3s ease, transform 0.2s ease;
-    position: relative;
-    padding: 0.2rem 0;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    transition: background 0.2s ease, color 0.2s ease;
 }
-.links::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--coffee-primary);
-    transition: width 0.3s ease;
+
+.link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.link.active { background: rgba(255,255,255,0.2); color: var(--accent); }
+
+.sidebar-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 }
-.links:hover {
-    color: var(--text-primary);
-}
-.links:hover::after {
+
+.logout-btn {
+    background: rgba(228, 32, 32, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom:20px;
     width: 100%;
+    text-align: center;
 }
-.links.active {
-    color: var(--text-primary);
-}
-.links.active::after {
-    width: 100%;
-}
-@media (max-width: 768px) {
-    .nav-container {
-        flex-direction: column;
-        padding: 1rem 2rem;
-        gap: 1rem;
-    }
-    .lenks {
-        flex-direction: column;
-        gap: 1rem;
-    }
+
+.logout-btn:hover {
+    background: var(--danger);
+    color: #fff;
+    border-color: var(--danger);
 }
 </style>
+<script>
+const toggleBtn = document.getElementById('toggleSidebar');
+const sidebar = document.getElementById('sidebar');
 
-<nav class="nav-container" aria-label="Main navigation">
-    <div class="header">
-        <div class="image">
-            <img src="{{ asset('storage/' . $schoolBadge) }}" class="logo-img" alt="School Badge">
-        </div>
-        <a href="/dashboard" class="span">{{ $schoolName }}</a>
-    </div>
-
-    <div class="nav-group" id="nav">
-        @auth
-            <div class="lenks">
-                <a href="/teachers/show" class="links {{ Request::is('teachers/*') ? 'active' : '' }}">Teachers</a>
-                <a href="/students/show" class="links {{ Request::is('students/*') ? 'active' : '' }}">Students</a>
-                <a href="/courses/show" class="links {{ Request::is('courses/*') ? 'active' : '' }}">Course</a>
-               <form method="POST" action="/logout">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btnm">Log out</button>
-                    </form>
-            </div>
-        @else
-            <div class="lenks">
-                <a href="/login" class="links {{ Request::is('login') ? 'active' : '' }}">Login</a>
-                <a href="/register" class="links {{ Request::is('register') ? 'active' : '' }}">Register</a>
-            </div>
-        @endauth
-    </div>
-</nav>
+toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+});
+</script>

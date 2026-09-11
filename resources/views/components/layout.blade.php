@@ -4,59 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'School Management System' }}</title>
-    <link rel="stlyesheet" href="css/app.css" />
+     <style>
+        {!! file_get_contents(resource_path('css/app.css')) !!}
+        {!! file_get_contents(resource_path('css/popups.css')) !!}
+    </style>
     <style>
+html, body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+.sidebar {
+  background: var(--sidebar-bg);
+}
+a, .links, .btn {
+  color: var(--text);
+}
+.btn.primary {
+  background: var(--accent);
+  color: #fff;
+}
+body.theme-light {
+  --bg: #f9fafb;
+  --text: #111827;
+  --accent: #2563eb;
+  --sidebar-bg: #0f1724;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.theme-dark {
+  --bg: #0b1220;
+  --text: #e5e7eb;
+  --accent: #38bdf8;
+  --sidebar-bg: #111827;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.theme-blue {
+  --bg: #eaf2ff;
+  --text: #1e293b;
+  --accent: #2563eb;
+  --sidebar-bg: #1e40af;
+  background: var(--bg);
+  color: var(--text);
+}
+
         :root {
-            --bg-main: #030305;
-            --bg-glass: rgba(10, 10, 14, 0.85);
-            --card-glass: rgba(255, 255, 255, 0.02);
-            --border-glow: rgba(255, 255, 255, 0.05);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --coffee-primary: #6f4e37;
-            --coffee-glow: rgba(111, 78, 55, 0.25);
-            --coffee-light: #dcd1c4;
+            --bg-main: #f4f6f9;
+            --sidebar-bg: #072846;
+            --accent: #6f4e37;
+            --danger: #ef4444;
         }
 
-       html, body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        html, body {
             margin: 0;
-            max-height:100vh;
-            overflow-x: hidden;
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-main);
+            color: #1e293b;
         }
 
         .global-layout-wrapper {
-            position: relative;
+            display: flex;
             min-height: 100vh;
-            background: var(--bg-glass);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
         }
 
-        .global-layout-wrapper::before {
-            content: '';
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            color: #fff;
+            transition: width 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+        }
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        /* Toggle button */
+        #toggleSidebar {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+        #toggleSidebar:hover { transform: rotate(90deg); }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+            margin-left: 260px; /* default sidebar width */
+        }
+        .sidebar.collapsed + .main-content {
+            margin-left: 80px; /* collapsed sidebar width */
+        }
+
+        /* Mobile overlay */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                top: 0;
+                height: 100%;
+                z-index: 1001;
+            }
+            .sidebar.active { left: 0; }
+            .main-content { margin-left: 0; }
+        }
+
+        .overlay {
             position: fixed;
-            top: -250px;
-            right: -250px;
-            width: 800px;
-            height: 300px;
-            background: radial-gradient(circle at center, var(--coffee-glow) 0%, rgba(74, 44, 17, 0.03) 60%, transparent 100%);
-            pointer-events: none;
-            z-index: 0;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            display: none;
         }
-        </style>
-        <style>
-    {!! file_get_contents(resource_path('css/app.css')) !!}
-    {!! file_get_contents(resource_path('css/popups.css')) !!}
-</style>
-
+        .overlay.active { display: block; }
+    </style>
 </head>
 <body>
-
-    <div class="global-layout-wrapper">
+    <div class="sidebar" id="sidebar">
+        <button id="toggleSidebar">☰</button>
+        @include('partials.navbar')
+    </div>
+    <div class="main-content">
         {{ $slot }}
     </div>
+    <div class="overlay"></div>
+
+    <script>
+        const toggleBtn = document.getElementById('toggleSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.overlay');
+
+        toggleBtn.addEventListener('click', () => {
+            if(window.innerWidth <= 768){
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            } else {
+                sidebar.classList.toggle('collapsed');
+            }
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    </script>
 </body>
 </html>

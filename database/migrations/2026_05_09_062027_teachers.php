@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('image_path')->nullable();
             $table->string('teacher_name');
             $table->string('course');
-              $table->timestamps();
+           $table->string('email');
+            $table->string('password')->default('password123erd');
+            $table->timestamps();
         });
     }
 

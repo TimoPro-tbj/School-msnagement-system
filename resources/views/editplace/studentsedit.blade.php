@@ -25,7 +25,6 @@
             border: none; border-radius: 6px; cursor: pointer; font-weight: 600;
         }
     </style>
-  @include('partials.navbar')
 
     <div class="form-container">
         <div class="form-header"><h2>Edit Student: {{ $student->name }}</h2></div>
